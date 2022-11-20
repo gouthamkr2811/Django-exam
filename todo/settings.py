@@ -58,16 +58,16 @@ WSGI_APPLICATION = 'todo.wsgi.application'
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "todo",
-        'USER' : "postgres",
-        'PASSWORD' : "0653",
-        'HOST' : "localhost",
-        'PORT' : ""
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': "todo",
+#         'USER' : "goutham",
+#         'PASSWORD' : "0653",
+#         'HOST' : "localhost",
+#         'PORT' : ""
+#     }
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -78,6 +78,12 @@ DATABASES = {
 #         'PORT' : ""
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 

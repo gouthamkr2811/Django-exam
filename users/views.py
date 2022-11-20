@@ -1,6 +1,7 @@
 
-from email import message
-from django.shortcuts import render, reverse
+import json
+
+from django.shortcuts import render, reverse, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from posts.models import Author
@@ -8,7 +9,7 @@ from users.models import ToDo
 from users.forms import ToDoForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,HttpResponseRedirect
-import json
+
 
 
 
@@ -127,20 +128,35 @@ def view_task(request):
 
 
 @login_required
-def delete_task(request, pk):
-    enquiry = ToDo.objects.get(pk=pk)
+def delete_task(request, id):
+    enquiry = get_object_or_404(ToDo, id=id)
+    enquiry. is_deleted=True
     enquiry.delete()
+    context={}
+    # return render(request, "users/web/index.html", context=context)
+    return HttpResponseRedirect(reverse('web:index'))
 
-    response_data = {
-        "status": "true",
-        "title": "Successfully Deleted",
-        "message": "Enquiry Successfully Deleted.",
-        "redirect": "true",
-        "redirect_url": reverse('enquiry_template'),
-    }
 
-    return HttpResponse(json.dumps(response_data), content_type='application/javascript')
 
 @login_required
-def reverse_task(request):
-        return render(request, "users/create.html", context=context)
+def edit_task(request, id):
+     instance = get_object_or_404(ToDo, id=id)
+     if request.method == 'POST':
+        form = ToDoForm(request.POST, instance=instance)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+
+     else:
+        form = ToDoForm(instance=instance)
+        context={
+            "form":form
+        }
+        return render(request, "users/web/index.html", context=context)
+
+
+def completed_task(request,id ):
+     enquiry = get_object_or_404(ToDo, id=id)
+     enquiry.completed_task=True
+     enquiry.save()
+     return HttpResponseRedirect(reverse('web:index'))

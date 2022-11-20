@@ -5,7 +5,7 @@ from users.models import ToDo
 
 
 def index(request):
-    instances = ToDo.objects.filter(is_deleted=False)
+    instances = ToDo.objects.filter(is_deleted=False,completed_task=False)
     form = ToDoForm()    
     context = {
         "title" : "Home Page",

@@ -61,6 +61,7 @@ button {
 
 #new-task-input::placeholder {
 	color: var(--grey);
+	border: 1px solid;
 }
 
 #new-task-submit {
@@ -183,7 +184,27 @@ section.header div.right a {
 	background: aquamarine;
 	padding: 13px 33px;
 }
-/* 
-input {
+
+/* input {
 	border: 1px solid;
-} */
+    padding: 13px 208px;
+    border-radius: 10px;
+    color: aqua;
+}  */
+.wes {}
+
+#id_creat_task {
+	border: 1px solid;
+	/* padding: 17px 140px; */
+	border-radius: 10px;
+	color: aqua;
+	width: 59%;
+	height: 51px;
+}
+
+.wes {
+	margin-top: 15px;
+	margin-right: 15px;
+	font-size: 18px;
+	color: aqua;
+}

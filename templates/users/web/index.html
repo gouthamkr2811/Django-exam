@@ -30,13 +30,13 @@
 
 	<header>
 		<h1>Student List 2021</h1>
-		
+
 		<form id="new-task-form" method="post" action="{% url 'users:create_task' %}">
 			{% csrf_token %}
-			<label for="{{form.creat_task.id_for_label}}">{{form.creat_task.label}}</label>
-			{{form.creat_task}} 
+			<label class="wes" for="{{form.creat_task.id_for_label}}">Create task</label>
+			{{form.creat_task}}
 
-			<input type="submit" id="new-task-submit" value="Add task" />
+			<input  type="submit" id="new-task-submit" value="Add task" />
 		</form>
 	</header>
 	<main>
@@ -47,15 +47,15 @@
 				{% for instance in instances %}
 				<div class="task">
 					<div class="content">
-						<input 
-							type="text" 
-							class="text" 
-							value="{{instance.creat_task}}"
-							readonly>
+						<input type="text" class="text" value="{{instance.creat_task}}" readonly>
 					</div>
 					<div class="actions">
-						<button class="edit">Edit</button>
-						<a href="{% url 'users:delete_task'  %}"><button class="delete">Delete</button></a>
+						<a href="{% url 'users:edit_task' id=instance.id %}">
+							<button class="edit">Edit</button></a>
+						<a href="{% url 'users:delete_task' id=instance.id  %}"><button
+								class="delete">Delete</button></a>
+						<a href="{% url 'users:completed_task' id=instance.id  %}"><button
+								class="delete ">Completed</button></a>
 					</div>
 				</div>
 				{% endfor %}
@@ -63,7 +63,8 @@
 			{% endif %}
 		</section>
 	</main>
-
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 	<script src="{% static 'js/main.js' %}"></script>
 </body>
 

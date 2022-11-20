@@ -14,6 +14,6 @@ class ToDoForm(forms.ModelForm):
         fields = ['creat_task',]
 
         widgets = {
-            'creat_task': forms.TextInput(attrs={'id': '#new-task-input'})
+            'creat_task': forms.TextInput(attrs={'class': ' task'})
         
         }

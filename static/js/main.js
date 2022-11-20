@@ -1,62 +1,91 @@
-// window.addEventListener('load', () => {
-// 	const form = document.querySelector("#new-task-form");
-// 	const input = document.querySelector("#new-task-input");
-// 	const list_el = document.querySelector("#tasks");
-
-// 	form.addEventListener('submit', (e) => {
-// 		e.preventDefault();
-
-// 		const task = input.value;
-
-// 		const task_el = document.createElement('div');
-// 		task_el.classList.add('task');
-
-// 		const task_content_el = document.createElement('div');
-// 		task_content_el.classList.add('content');
-
-// 		task_el.appendChild(task_content_el);
-
-// 		const task_input_el = document.createElement('input');
-// 		task_input_el.classList.add('text');
-// 		task_input_el.type = 'text';
-// 		task_input_el.value = task;
-// 		task_input_el.setAttribute('readonly', 'readonly');
-
-// 		task_content_el.appendChild(task_input_el);
-
-// 		const task_actions_el = document.createElement('div');
-// 		task_actions_el.classList.add('actions');
-		
-// 		const task_edit_el = document.createElement('button');
-// 		task_edit_el.classList.add('edit');
-// 		task_edit_el.innerText = 'Edit';
-
-// 		const task_delete_el = document.createElement('button');
-// 		task_delete_el.classList.add('delete');
-// 		task_delete_el.innerText = 'Delete';
-
-// 		task_actions_el.appendChild(task_edit_el);
-// 		task_actions_el.appendChild(task_delete_el);
-
-// 		task_el.appendChild(task_actions_el);
-
-// 		list_el.appendChild(task_el);
-
-// 		input.value = '';
-
-// 		task_edit_el.addEventListener('click', (e) => {
-// 			if (task_edit_el.innerText.toLowerCase() == "edit") {
-// 				task_edit_el.innerText = "Save";
-// 				task_input_el.removeAttribute("readonly");
-// 				task_input_el.focus();
-// 			} else {
-// 				task_edit_el.innerText = "Edit";
-// 				task_input_el.setAttribute("readonly", "readonly");
-// 			}
-// 		});
-
-// 		task_delete_el.addEventListener('click', (e) => {
-// 			list_el.removeChild(task_el);
-// 		});
-// 	});
-// });
+$(document).on("click", ".action-button", function (e) {
+    e.preventDefault();
+    $this = $(this);
+    var text = $this.attr("data-text");
+    var type = "warning";
+    var confirmButtonText = "Yes";
+    var confirmButtonColor = "#DD6B55";
+    var url = $this.attr("href");
+    var title = $this.attr("data-title");
+    if (!title) {
+      title = "Are you sure?";
+    }
+    var isReload = $this.hasClass("reload");
+    var isRedirect = $this.hasClass("redirect");
+    var noResponsePopup = $this.hasClass("no-response-popup");
+  
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: type,
+      showCancelButton: true,
+      confirmButtonText: confirmButtonText,
+      confirmButtonColor: confirmButtonColor,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.showLoading();
+  
+        window.setTimeout(function () {
+          jQuery.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function (data) {
+              var message = data["message"];
+              var status = data["status"];
+              var redirect = data["redirect"];
+              var redirect_url = data["redirect_url"];
+              var stable = data["stable"];
+              var title = data["title"];
+  
+              Swal.hideLoading();
+  
+              if (status === "success") {
+                if (title) {
+                  title = title;
+                } else {
+                  title = "Success";
+                }
+                if (!noResponsePopup) {
+                  Swal.fire({
+                    icon: "success",
+                    title: title,
+                    text: message,
+                    type: "success",
+                  }).then((result) => {
+                    if (stable != "yes") {
+                      if (isRedirect && redirect == "yes") {
+                        window.location.href = redirect_url;
+                      }
+                      if (isReload) {
+                        window.location.reload();
+                      }
+                    }
+                  });
+                }
+              } else {
+                if (title) {
+                  title = title;
+                } else {
+                  title = "An Error Occurred";
+                }
+  
+                Swal.fire(title, message, "error");
+  
+                if (stable != "true") {
+                  window.setTimeout(function () {}, 2000);
+                }
+              }
+            },
+            error: function (data) {
+              Swal.hideLoading();
+  
+              var title = "An error occurred";
+              var message = "An error occurred. Please try again later.";
+              Swal.fire(title, message, "error");
+            },
+          });
+        }, 100);
+      }
+    });
+  });

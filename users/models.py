@@ -12,11 +12,12 @@ class create(models.Model):
 
 
 class ToDo(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)/
     username = models.ForeignKey("auth.User",on_delete=models.CASCADE)
     is_deleted = models.BooleanField(default=False)
     creat_task = models.CharField(null=False, blank=False, max_length=120)
-    completed_task =models.TextField(null=True, blank=True)
+    completed_task =models.BooleanField(default=False)
+
 
     class Meta:
         verbose_name = 'ToDo'
